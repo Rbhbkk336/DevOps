@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Main{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+{% endblock %}
+
+{% block body %}
+    <header class="header">
+        <div class="header__content">
+            <div class="header__tittle">Image Catalog</div>
+            <div class="header__links">
+                {% if app.user %}
+                    <form action="{{ path('app_profile') }}" method="get">
+                        <button class="profile__btn" type="submit">Профиль</button>
+                    </form>
+                    <form action="{{ path('app_logout') }}" method="get">
+                        <button class="btn" type="submit">Выйти</button>
+                    </form>
+                {% else %}
+                    <form action="{{ path('app_login') }}" method="get">
+                        <button class="btn" type="submit">Войти</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="search__upload__container">
+            <form class="search__form" action="/search" method="GET">
+                <input type="text" name="query" placeholder="Поиск по ключевым словам..." required>
+                <button type="submit">
+                    <img src="{{ asset('assets/image/search.svg') }}" alt="Search" class="search__svg">
+                </button>
+            </form>
+
+            <a href="/upload" class="upload__button">Загрузить</a>
+        </div>
+
+        <div class="image__grid">
+            {% for image in images %}
+                <div class="image__card">
+                    <img src="{{ asset('uploads/' ~ image.filename) }}" alt="Uploaded image" class="image__preview">
+                    <div class="image__info">
+                        <p class="image__owner">by {{ image.user.email }}</p>
+                        <p class="recognized__text">{{ image.recognizedText|u.truncate(100) }}</p>
+                        <div class="keywords">
+                            {% for keyword in image.keywords %}
+                                <span class="keyword">{{ keyword }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <a href="{{ asset('uploads/' ~ image.filename) }}" download class="download__icon" title="Скачать изображение">
+                        ⬇️
+                    </a>
+                </div>
+            {% else %}
+                <p>Нет подходящих изображений.</p>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock %}

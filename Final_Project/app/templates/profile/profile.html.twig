@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+{% endblock %}
+
+{% block body %}
+    <header class="header">
+        <div class="header__content">
+            <div class="header__tittle">Image Catalog</div>
+            <div class="header__links">
+                <form action="{{ path('app_main') }}" method="get">
+                    <button class="btn" type="submit">Каталог</button>
+                </form>
+                <form action="{{ path('app_logout') }}" method="get">
+                    <button class="btn" type="submit">Выйти</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <h2 style="margin: 32px 0; font-size: 24px; color: #163356;">Личный кабинет</h2>
+
+        <div style="background-color: #f9f9f9; padding: 24px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+            <p><strong>Имя:</strong> {{ app.user.name }}</p>
+            <p><strong>Email:</strong> {{ app.user.email }}</p>
+        </div>
+
+        <div class="image__grid">
+            {% for image in images %}
+                <div class="image__card">
+                    <img src="{{ asset('uploads/' ~ image.filename) }}" alt="Uploaded image" class="image__preview">
+                    <div class="image__info">
+                        <p class="image__owner">by {{ image.user.email }}</p>
+                        <p class="recognized__text">{{ image.recognizedText|u.truncate(100) }}</p>
+                        <div class="keywords">
+                            {% for keyword in image.keywords %}
+                                <span class="keyword">{{ keyword }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <a href="{{ asset('uploads/' ~ image.filename) }}" download class="download__icon" title="Скачать изображение">
+                        ⬇️
+                    </a>
+                </div>
+            {% else %}
+                <p>Пока нет загруженных изображений.</p>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock %}

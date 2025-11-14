@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Upload Image{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/upload.css') }}">
+{% endblock %}
+
+{% block body %}
+    <header class="header">
+        <div class="header__content">
+            <div class="header__tittle">Image Catalog</div>
+            <div class="header__links">
+                {% if app.user %}
+                    <form action="{{ path('app_main') }}" method="get">
+                        <button class="btn" type="submit">Каталог</button>
+                    </form>
+                    <form action="{{ path('app_logout') }}" method="get">
+                        <button class="btn" type="submit">Выйти</button>
+                    </form>
+                {% else %}
+                    <form action="{{ path('app_login') }}" method="get">
+                        <button class="btn" type="submit">Войти</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="upload-container">
+        <h1 class="upload-title">Загрузка изображения</h1>
+
+        {{ form_start(uploadForm, {'attr': {'id': 'uploadForm', 'enctype': 'multipart/form-data'}}) }}
+
+        {{ form_row(uploadForm._token) }}
+
+        {{ form_row(uploadForm.imageFile) }}
+
+        <div id="dynamicFields" class="hidden">
+            <div class="preview-container">
+                <img id="imagePreview" src="" alt="Preview" class="preview hidden"/>
+            </div>
+
+            {{ form_row(uploadForm.isPrivate) }}
+
+            <div id="keywordsWrapper" class="keywords-container hidden">
+                <label for="keywordInput">Ключевые слова:</label>
+                <div id="keywordsList" class="keywords-list"></div>
+                <input type="text" id="keywordInput" class="keyword-input" placeholder="Добавте ключевые слова через Enter"/>
+            </div>
+        </div>
+
+        <button class="btn" type="submit">Загрузить</button>
+
+        {{ form_end(uploadForm, {'render_rest': false}) }}
+    </div>
+
+    <script src="{{ asset('assets/js/upload.js') }}"></script>
+{% endblock %}
